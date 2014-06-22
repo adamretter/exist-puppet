@@ -86,7 +86,7 @@ package { 'git':
 vcsrepo { $exist_home:
 	ensure => present,
 	provider => git,
-	source => "git@github.com:eXist-db/exist.git",
+	source => "https://github.com/eXist-db/exist.git",
 	revision => $exist_revision,
 	require => [Exec["puppetlabs/vcsrepo"], Package["git"]],
 	before => File[$exist_home]
