@@ -70,8 +70,10 @@ mount { $exist_data:
 ##
 # Add eXist banner to the MOTD
 ##
-file { "/etc/update-motd.d/10-exist-banner":
+file { "exist motd banner":
+	path => "/etc/update-motd.d/10-exist-banner",
 	ensure => present,
+	mode => 0755,
 	content =>
 '#!/bin/sh
 
@@ -89,5 +91,10 @@ and Application Platform
 http://www.exist-db.org
 
 EOF'
+}
+
+exec { "update motd":
+	command => "/usr/sbin/update-motd",
+	require => File["exist motd banner"]
 }
 
