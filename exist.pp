@@ -29,7 +29,7 @@ exec { "puppetlabs/vcsrepo":
 ##
 package { 'ntp': ensure => installed }
 
-service { "ntp":
+service { "ntpd":
     ensure => running,
     enable => true,
     pattern => 'ntpd',
