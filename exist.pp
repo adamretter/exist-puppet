@@ -127,20 +127,22 @@ exec { "build eXist":
 	require => File["${exist_home}/extensions/local.build.properties"]
 }
 
-file { "${exist_home}/conf.xml":
-	ensure => present,
-	content => template("conf.xml.erb"),
-	require => File[$exist_home]
-}
+#file { "${exist_home}/conf.xml":
+#	ensure => present,
+#	content => template("conf.xml.erb"),
+#	require => File[$exist_home]
+#}
 
 file { "/home/exist/.bash_profile":
-	ensure => present
+	ensure => present,
+	require => User["exist"]
 }->
 file_line { "EXIST_HOME in bash_profile":
 	line => "export EXIST_HOME=${exist_home}",
 	path => "/home/exist/.bash_profile",
 	require => [
 		Exec["puppetlabs/stdlib"],
+		User["exist"],
 		File[$exist_home]
 	]
 }
