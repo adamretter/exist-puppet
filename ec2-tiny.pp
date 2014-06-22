@@ -36,7 +36,7 @@ exec { "swapon":
 mount { "swap":
 	device => "/swapfile1",
 	fstype => "swap",
-	ensure => mounted,
+	ensure => present,
 	options => defaults,
 	dump => 0,
 	pass => 0,
@@ -49,26 +49,23 @@ mount { "swap":
 exec { "make database fs":
 	command => "/sbin/mkfs -t ext4 ${exist_data_fs_dev}",
 	unless => "/bin/mount | /bin/grep ${exist_data_fs_dev} | /bin/grep ext4",
-	before => Mount[$exist_data_fs_dev]
+	before => Mount[$exist_data]
 }
 
-mount { $exist_data_fs_dev:
-	device => $exist_data,
+file { $exist_data:
+        ensure => directory,
+        mode => 700,
+}
+
+mount { $exist_data:
+	device => $exist_data_fs_dev,
 	fstype => "ext4",
 	ensure => mounted,
 	options => defaults,
 	dump => 0,
-	pass => 2
+	pass => 2,
+	require => File[$exist_data]
 }
-
-file { $exist_data:
-	ensure => directory,
-	owner => "exist",
-	group => "exist",
-	mode => 750,
-	require => Mount[$exist_data_fs_dev]
-}
-
 
 ##
 # Add eXist banner to the MOTD
