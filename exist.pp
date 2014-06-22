@@ -120,6 +120,7 @@ include.module.process = false",
 exec { "build eXist":
 	cwd => $exist_home,
 	command => "${exist_home}/build.sh",
+	timeout => 0,
 	user => "exist",
 	group => "exist",
 	refreshonly => true,
