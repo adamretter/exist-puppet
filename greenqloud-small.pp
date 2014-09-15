@@ -1,4 +1,5 @@
 include lvm
+#include motd
 include ufw
 
 ##
@@ -13,6 +14,7 @@ include ufw
 $locale = "en_GB.UTF-8 UTF-8"
 $tz = "Europe/London"
 $data_fs_dev = "/dev/vdb"
+$data_root = "/data"
 $exist_data = "/data/exist"
 
 ###
@@ -59,24 +61,34 @@ lvm::volume { "data":
 ##
 # Mount point for the exist filesystem
 ##
+file { $data_root:
+	ensure => directory,
+	mode => 700,
+} ~>
+
 file { $exist_data:
         ensure => directory,
         mode => 700,
 }
 
-mount { $exist_data:
-	device => $exist_data_fs_dev,
+mount { $data_root:
+	device => "/dev/data/data",
 	fstype => "xfs",
 	ensure => mounted,
 	options => defaults,
 	dump => 0,
 	pass => 2,
-	require => File[$exist_data]
+	require => File[$data_root]
 }
 
 ##
 # Add eXist banner to the MOTD
 ##
+class { "motd":
+	template => "./templates/motd.erb",
+}
+
+
 file { "exist motd banner":
 	path => "/etc/update-motd.d/10-exist-banner",
 	ensure => present,
@@ -100,7 +112,7 @@ http://www.exist-db.org
 EOF'
 }
 
-exec { "update motd":
-	command => "/usr/sbin/update-motd",
-	require => File["exist motd banner"]
-}
+#exec { "update motd":
+#	command => "/usr/sbin/update-motd",
+#	require => File["exist motd banner"]
+#}
