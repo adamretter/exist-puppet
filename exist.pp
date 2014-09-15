@@ -68,11 +68,24 @@ file_line { "deny exist ssh":
 ##
 # Ensure eXist pre-requisite packages are installed
 ##
-package { 'java-1.7.0-openjdk':
+
+$pkg_jre = $operatingsystem ? {
+	centos => "java-1.7.0-openjdk",
+	redhat => "java-1.7.0-openjdk",
+	default => "openjdk-7-jre"
+}
+
+$pkg_jdk = $operatingsystem ? {
+	centos => "java-1.7.0-openjdk-devel",
+	redhat => "java-1.7.0-openjdk-devel",
+	default => "openjdk-7-jdk"
+}
+
+package { $pkg_jre:
 	ensure => installed
 }
 
-package { 'java-1.7.0-openjdk-devel':
+package { $pkg_jdk:
 	ensure => installed,
 }
 
