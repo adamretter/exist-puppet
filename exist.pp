@@ -12,17 +12,11 @@ $exist_data = "/exist-data"
 $exist_cache_size = "128M"
 $exist_collection_cache_size = "24M"
 
+$rhel_pkg_jdk = "java-1.7.0-openjdk-devel"
+$rhel_pkg_jre = "java-1.7.0-openjdk"
+$deb_pkg_jdk = "openjdk-7-jdk"
+$deb_pkg_jre = "openjdk-7-jre"
 
-
-exec { "puppetlabs/stdlib":
-	command => "/usr/sbin/puppet module install puppetlabs/stdlib",
-	creates => "/etc/puppet/modules/stdlib"
-}
-
-exec { "puppetlabs/vcsrepo":
-	command => "/usr/sbin/puppet module install puppetlabs/vcsrepo",
-	creates => "/etc/puppet/modules/vcsrepo"
-}
 
 ##
 # Make sure that NTP is installed and running
@@ -56,13 +50,12 @@ user { "exist":
 	require => Group["exist"]
 }
 
-file { "/etc/ssh/sshd_config":
-	ensure => present
-}->
-file_line { "deny exist ssh":
-	line => "DenyUsers exist",
-	path => "/etc/ssh/sshd_config",
-	require => Exec["puppetlabs/stdlib"]
+augeas {
+	"Deny exist ssh":
+	context => "/files/etc/ssh/sshd_config",
+	changes => [
+		"set DenyUsers exist"
+	]
 }
 
 ##
@@ -70,15 +63,17 @@ file_line { "deny exist ssh":
 ##
 
 $pkg_jre = $operatingsystem ? {
-	centos => "java-1.7.0-openjdk",
-	redhat => "java-1.7.0-openjdk",
-	default => "openjdk-7-jre"
+	centos => $rhel_pkg_jre,
+	redhat => $rhel_pkg_jre,
+	Amazon => $rhel_pkg_jre,
+	default => $deb_pkg_jre
 }
 
 $pkg_jdk = $operatingsystem ? {
-	centos => "java-1.7.0-openjdk-devel",
-	redhat => "java-1.7.0-openjdk-devel",
-	default => "openjdk-7-jdk"
+	centos => $rhel_pkg_jdk,
+	redhat => $rhel_pkg_jdk,
+	Amazon => $rhel_pkg_jdk,
+	default => $deb_pkg_jdk
 }
 
 package { $pkg_jre:
@@ -109,7 +104,7 @@ file { $exist_home:
 	ensure => present,
 	owner => "exist",
 	group => "exist",
-	mode => 700,
+	mode => "g=-rwx,o=-rwx",
 	recurse => true
 }
 
@@ -126,6 +121,7 @@ include.feature.xslt = false
 include.module.cache = false
 include.module.scheduler = true
 include.module.xslfo = true
+include.module.xslfo.url = http://apache.cs.uu.nl/xmlgraphics/fop/binaries/fop-1.1-bin.zip
 include.module.process = false",
 	require => File[$exist_home]
 }
