@@ -96,7 +96,6 @@ vcsrepo { $exist_home:
 	provider => git,
 	source => "https://github.com/eXist-db/exist.git",
 	revision => $exist_revision,
-	require => [Exec["puppetlabs/vcsrepo"], Package["git"]],
 	before => File[$exist_home]
 }
 
@@ -137,12 +136,6 @@ exec { "build eXist":
 	require => File["${exist_home}/extensions/local.build.properties"]
 }
 
-#file { "${exist_home}/conf.xml":
-#	ensure => present,
-#	content => template("conf.xml.erb"),
-#	require => File[$exist_home]
-#}
-
 file { "/home/exist/.bash_profile":
 	ensure => present,
 	require => User["exist"]
@@ -151,8 +144,50 @@ file_line { "EXIST_HOME in bash_profile":
 	line => "export EXIST_HOME=${exist_home}",
 	path => "/home/exist/.bash_profile",
 	require => [
-		Exec["puppetlabs/stdlib"],
 		User["exist"],
 		File[$exist_home]
 	]
+}
+
+augeas { "conf.xml":
+	lens => "Xml.lns",
+	incl => "/usr/local/exist/conf.xml",
+	context => "/files/usr/local/exist/conf.xml/",
+	changes => [
+		"set exist/db-connection/#attribute/files $exist_data",
+		"set exist/db-connection/#attribute/cacheSize $exist_cache_size",
+		"set exist/db-connection/#attribute/collectionCache $exist_collection_cache_size",
+		"set exist/db-connection/recovery/#attribute/journal-dir $exist_data",
+		"set exist/serializer/#attribute/enable-xsl yes",
+
+		"set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/contentextraction",
+		"set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.contentextraction.xquery.ContentExtractionModule",
+
+		"set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/counter",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.counter.CounterModule",
+
+		"set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/exi",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.exi.ExiModule",
+
+		"set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/image",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.image.ImageModule",
+
+                "set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/mail",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.mail.MailModule",
+
+                "set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/scheduler",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.scheduler.SchedulerModule",
+
+                "set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/sql",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.sql.SQLModule",
+
+                "set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/xmldiff",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.xmldiff.XmlDiffModule",
+
+                "set exist/xquery/builtin-modules/module[last()+1]/#attribute/uri http://exist-db.org/xquery/xslfo",
+                "set exist/xquery/builtin-modules/module[last()]/#attribute/class org.exist.xquery.modules.xslfo.XSLFOModule",
+		"set exist/xquery/builtin-modules/module[last()]/parameter/#attribute/name processorAdapter",
+		"set exist/xquery/builtin-modules/module[last()]/parameter/#attribute/value org.exist.xquery.modules.xslfo.ApacheFopProcessorAdapter"
+	],
+	require => Exec["build eXist"]
 }
