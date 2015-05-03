@@ -11,6 +11,9 @@ $swap_size = 524288
 $exist_data_fs_dev = "/dev/xvdb"
 $exist_data = "/exist-data"
 
+exec { "yum update":
+	command => "/usr/bin/yum update -y"
+}
 
 ##
 # Create Swap file and Switch on the Swap
