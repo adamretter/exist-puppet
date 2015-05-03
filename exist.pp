@@ -6,7 +6,7 @@
 #
 ##
 
-$exist_revision = "eXist-2.1"
+$exist_revision = "eXist-2.2"
 $exist_home = "/usr/local/exist"
 $exist_data = "/exist-data"
 $exist_cache_size = "128M"
