@@ -50,12 +50,12 @@ user { "exist":
 	require => Group["exist"]
 }
 
-augeas {
-	"Deny exist ssh":
-	context => "/files/etc/ssh/sshd_config",
-	changes => [
-		"set DenyUsers exist"
-	]
+sshd_config { "DenyUsers":
+	ensure => present,
+	value  => [
+		"exist"
+	],
+	require => User["exist"]
 }
 
 ##
@@ -151,8 +151,8 @@ file_line { "EXIST_HOME in bash_profile":
 
 augeas { "conf.xml":
 	lens => "Xml.lns",
-	incl => "/usr/local/exist/conf.xml",
-	context => "/files/usr/local/exist/conf.xml/",
+	incl => "$exist_home/conf.xml",
+	context => "/files$exist_home/conf.xml/",
 	changes => [
 		"set exist/db-connection/#attribute/files $exist_data",
 		"set exist/db-connection/#attribute/cacheSize $exist_cache_size",
@@ -194,8 +194,8 @@ augeas { "conf.xml":
 
 augeas { "wrapper.conf":
         lens => "Properties.lns",
-        incl => "/usr/local/exist/tools/wrapper/conf/wrapper.conf",
-        context => "/files/usr/local/exist/tools/wrapper/conf/wrapper.conf/",
+        incl => "$exist_home/tools/wrapper/conf/wrapper.conf",
+        context => "/files$exist_home/tools/wrapper/conf/wrapper.conf/",
         changes => [
                 "set wrapper.pidfile $exist_home",
                 "set wrapper.java.pidfile $exist_home"
@@ -205,4 +205,23 @@ augeas { "wrapper.conf":
 		Exec["build eXist"]
 	]
 }
+
+file_line { "exist.sh upstart":
+	match => '^USE_UPSTART=$',
+        line => "USE_UPSTART=true",
+        path => "$exist_home/tools/wrapper/bin/exist.sh",
+        require => [
+                File[$exist_home],
+		Exec["build eXist"]
+        ]
+}->
+file_line { "exist.sh run_as":
+	match => '^#RUN_AS_USER=$',
+        line => "RUN_AS_USER=exist",
+        path => "$exist_home/tools/wrapper/bin/exist.sh",
+        require => [
+		User["exist"]
+        ]
+}
+
 
