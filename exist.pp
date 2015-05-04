@@ -58,6 +58,17 @@ sshd_config { "DenyUsers":
 	require => User["exist"]
 }
 
+file { $exist_data:
+	ensure => directory,
+	owner => "exist",
+	group => "exist",
+	mode => 0760,
+	require => [
+		User["exist"],
+		Group["exist"]
+	]
+}
+
 ##
 # Ensure eXist pre-requisite packages are installed
 ##
@@ -189,7 +200,10 @@ augeas { "conf.xml":
 		"set exist/xquery/builtin-modules/module[last()]/parameter/#attribute/name processorAdapter",
 		"set exist/xquery/builtin-modules/module[last()]/parameter/#attribute/value org.exist.xquery.modules.xslfo.ApacheFopProcessorAdapter"
 	],
-	require => Exec["build eXist"]
+	require => [
+		Exec["build eXist"],
+		File[$exist_data]
+	]
 }
 
 augeas { "wrapper.conf":
