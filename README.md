@@ -1,10 +1,10 @@
-exist-puppet
-============
+eXist Puppet Manifests
+======================
 
-Puppet manifests for eXist-db (with optional nginx proxy)
-In additionl we provide ioptional platform manifests for Amazon EC2 and GreenQloud
+[Puppet](https://puppetlabs.com) manifests for [eXist](http://www.exist-db.org) (with optional [nginx](http://nginx.org/en/) proxy)
+In addition, we also provide optional platform manifests for [Amazon EC2](http://aws.amazon.com/ec2/) and [GreenQloud](http://www.greenqloud.com) cloud instances.
 
-1. `exist.pp` will install a fairly minimal eXist system for you where eXist is configured to run using the Java Service Wrapper under an `exist` user account. See the variables in the top of the file to change the data directory for eXist (assumes `/exist-data`) and various other config settings.
+1. `exist.pp` will install a fairly minimal eXist system for you where eXist is configured to run using the [Java Service Wrapper](http://http://wrapper.tanukisoftware.com/) under an `exist` user account. See the variables in the top of the file to change the data directory for eXist (assumes `/exist-data`) and various other config settings.
 
 2. `exist-nginx.pp` will install nginx and set it up to proxy eXist.
 
@@ -13,11 +13,11 @@ In additionl we provide ioptional platform manifests for Amazon EC2 and GreenQlo
 
 Installing eXist on EC2
 =======================
-1. Create a VM with two volumes: `/dev/xvda` for the OS and `/dev/xvdb` for eXist's database files. Amazon Linux is recommended, although Ubuntu, RHEL or any derivatives of those should also work.
+1. Create a VM with two volumes: `/dev/xvda` for the OS, and `/dev/xvdb` for eXist's database files. Amazon Linux is recommended, although Ubuntu, RHEL or any derivatives of those should also work.
 
 2. Connect to your new VM via SSH e.g. `ssh -i your-key.pem ec2-user@52.1.129.39`.
 
-3. Run the following commands to clone this repo and execite the Puppet manifests:
+3. Run the following commands (on Amazon Linux) to clone this repo and execute the Puppet manifests:
 ```bash
 sudo yum install git puppet3 augeas
 sudo mkdir /etc/puppet/modules
