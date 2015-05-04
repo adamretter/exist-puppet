@@ -1,8 +1,8 @@
 eXist Puppet Manifests
 ======================
+[Puppet](https://puppetlabs.com) is a Configuration Management Utility, and we can use it to ensure a consistent and repeatable installation and configuration of [eXist](http://www.exist-db.org).
 
-[Puppet](https://puppetlabs.com) manifests for [eXist](http://www.exist-db.org) (with optional [nginx](http://nginx.org/en/) proxy)
-In addition, we also provide optional platform manifests for [Amazon EC2](http://aws.amazon.com/ec2/) and [GreenQloud](http://www.greenqloud.com) cloud instances.
+Here we provide Puppet manifests for eXist, with optional [nginx](http://nginx.org/en/) proxy support, and optional platform manifests for [Amazon EC2](http://aws.amazon.com/ec2/) and [GreenQloud](http://www.greenqloud.com) cloud instances.
 
 1. `exist.pp` will install a fairly minimal eXist system for you where eXist is configured to run using the [Java Service Wrapper](http://http://wrapper.tanukisoftware.com/) under an `exist` user account. See the variables in the top of the file to change the data directory for eXist (assumes `/exist-data`) and various other config settings.
 
