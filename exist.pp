@@ -191,3 +191,18 @@ augeas { "conf.xml":
 	],
 	require => Exec["build eXist"]
 }
+
+augeas { "wrapper.conf":
+        lens => "Properties.lns",
+        incl => "/usr/local/exist/tools/wrapper/conf/wrapper.conf",
+        context => "/files/usr/local/exist/tools/wrapper/conf/wrapper.conf/",
+        changes => [
+                "set wrapper.pidfile $exist_home",
+                "set wrapper.java.pidfile $exist_home"
+        ],
+        require => [
+		File[$exist_home],
+		Exec["build eXist"]
+	]
+}
+
