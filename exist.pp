@@ -245,6 +245,23 @@ file_line { "exist.sh run_as":
 		File[$exist_home],
 		User["exist"]
         ]
+}->
+exec { "install":
+        cwd => $exist_home,
+        command => "${exist_home}/tools/wrapper/bin/exist.sh install",
+        timeout => 0,
+        user => "root",
+        refreshonly => true,
+        subscribe => Exec["build eXist"],
+	require => Augeas["wrapper.conf"]
 }
 
+service { "eXist-db":
+	ensure => running,
+	subscribe => Exec["install"],
+	require => [
+		Exec["build eXist"],
+		Augeas["conf.xml"]
+	]
+}
 
