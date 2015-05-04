@@ -220,13 +220,21 @@ augeas { "wrapper.conf":
 	]
 }
 
+file_line { "exist.sh piddir":
+	match => '^PIDDIR="."$',
+        line => "PIDDIR=$exist_home",
+        path => "$exist_home/tools/wrapper/bin/exist.sh",
+        require => [
+                File[$exist_home],
+                Exec["build eXist"]
+        ]
+}->
 file_line { "exist.sh upstart":
 	match => '^USE_UPSTART=$',
         line => "USE_UPSTART=true",
         path => "$exist_home/tools/wrapper/bin/exist.sh",
         require => [
-                File[$exist_home],
-		Exec["build eXist"]
+                File[$exist_home]
         ]
 }->
 file_line { "exist.sh run_as":
@@ -234,6 +242,7 @@ file_line { "exist.sh run_as":
         line => "RUN_AS_USER=exist",
         path => "$exist_home/tools/wrapper/bin/exist.sh",
         require => [
+		File[$exist_home],
 		User["exist"]
         ]
 }
