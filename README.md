@@ -8,7 +8,7 @@ Here we provide Puppet manifests for eXist, with optional [nginx](http://nginx.o
 
 2. `exist-nginx.pp` will install nginx and set it up to proxy eXist.
 
-3. `ec2-tiny.pp` will take an EC2 VM and set it up for running eXist. It expects the VM to have two volumes: `/dev/xvda`, for the OS and `/dev/xvdb` dedicated for the eXist database files.
+3. `ec2-tiny.pp` will take an EC2 VM and set it up for running eXist. It expects the VM to have two volumes: `/dev/xvda`, for the OS and `/dev/xvdb` dedicated for the eXist database files. ***WARNING*** This script is descructive as it will reformat `/dev/xvdb` with a clean ext4 filesystem!
 
 
 Installing eXist on EC2
