@@ -129,6 +129,7 @@ file { "${exist_home}/extensions/local.build.properties":
 	content =>
 "include.feature.contentextraction = true
 include.feature.security.ldap = false
+include.feature.security.activedirectory = false
 include.feature.tomcat-realm = false
 include.feature.xslt = false
 include.module.cache = false
@@ -150,13 +151,13 @@ exec { "build eXist":
 	require => File["${exist_home}/extensions/local.build.properties"]
 }
 
-file { "/home/exist/.bash_profile":
+file { "/home/exist/.profile":
 	ensure => present,
 	require => User["exist"]
 }->
 file_line { "EXIST_HOME in bash_profile":
 	line => "export EXIST_HOME=${exist_home}",
-	path => "/home/exist/.bash_profile",
+	path => "/home/exist/.profile",
 	require => [
 		User["exist"],
 		File[$exist_home]
@@ -238,8 +239,8 @@ file_line { "exist.sh piddir":
         ]
 }->
 file_line { "exist.sh upstart":
-	match => startup_sys[0],
-        line => startup_sys[1],
+        match => $startup_sys[0],
+        line => $startup_sys[1],
         path => "$exist_home/tools/wrapper/bin/exist.sh",
         require => [
                 File[$exist_home]
