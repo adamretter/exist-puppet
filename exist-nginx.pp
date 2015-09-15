@@ -9,9 +9,8 @@ package { "nginx":
 
 file { $nginx_config:
 	ensure => present,
-	content => '
-user  nginx;
-worker_processes  1;
+	content => 'user  www-data;
+worker_processes  4;
 error_log  /var/log/nginx/error.log;
 pid        /var/run/nginx.pid;
 
