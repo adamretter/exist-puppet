@@ -6,16 +6,16 @@
 #
 ##
 
-$exist_revision = "eXist-2.2"
+$exist_revision = "eXist-3.0.RC1"
 $exist_home = "/usr/local/exist"
 $exist_data = "/exist-data"
 $exist_cache_size = "128M"
 $exist_collection_cache_size = "24M"
 
-$rhel_pkg_jdk = "java-1.7.0-openjdk-devel"
-$rhel_pkg_jre = "java-1.7.0-openjdk"
-$deb_pkg_jdk = "openjdk-7-jdk"
-$deb_pkg_jre = "openjdk-7-jre"
+$rhel_pkg_jdk = "java-1.8.0-openjdk-devel"
+$rhel_pkg_jre = "java-1.8.0-openjdk"
+$deb_pkg_jdk = "openjdk-8-jdk"
+$deb_pkg_jre = "openjdk-8-jre"
 
 
 ##
