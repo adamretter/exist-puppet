@@ -17,6 +17,9 @@ $rhel_pkg_jre = "java-1.8.0-openjdk"
 $deb_pkg_jdk = "openjdk-8-jdk"
 $deb_pkg_jre = "openjdk-8-jre"
 
+$upstart_startup_sys = ['^USE_UPSTART=$', "USE_UPSTART=true"]
+$systemd_startup_sys = ['^USE_SYSTEMD=$', "USE_SYSTEMD=true"]
+
 
 ##
 # Make sure that NTP is installed and running
@@ -220,6 +223,11 @@ augeas { "wrapper.conf":
 	]
 }
 
+$startup_sys = $operatingsystem ? {
+        ubuntu => $systemd_startup_sys,
+        default => $upstart_startup_sys
+}
+
 file_line { "exist.sh piddir":
 	match => '^PIDDIR="."$',
         line => "PIDDIR=$exist_home",
@@ -230,8 +238,8 @@ file_line { "exist.sh piddir":
         ]
 }->
 file_line { "exist.sh upstart":
-	match => '^USE_UPSTART=$',
-        line => "USE_UPSTART=true",
+	match => startup_sys[0],
+        line => startup_sys[1],
         path => "$exist_home/tools/wrapper/bin/exist.sh",
         require => [
                 File[$exist_home]
