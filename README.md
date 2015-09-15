@@ -24,6 +24,7 @@ sudo mkdir /etc/puppet/modules
 sudo puppet module install puppetlabs/vcsrepo
 sudo puppet module install puppetlabs/stdlib
 sudo puppet module install herculesteam/augeasproviders
+sudo puppet module install attachmentgenie-ufw
 
 git clone https://github.com/adamretter/exist-puppet.git
 cd exist-puppet
