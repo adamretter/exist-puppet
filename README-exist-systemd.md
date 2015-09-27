@@ -1,4 +1,4 @@
-On Ubuntu Vivid using Systemd, there is an issue with starting eXist. You need to edit /etc/systemd/system/eXist-db.sercice and add:
+On Ubuntu Vivid (or newer) using Systemd, there is an issue with starting eXist. You need to edit /etc/systemd/system/eXist-db.service and add:
 
 User=exist
 
