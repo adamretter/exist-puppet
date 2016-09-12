@@ -135,7 +135,7 @@ include.feature.xslt = false
 include.module.cache = false
 include.module.scheduler = true
 include.module.xslfo = true
-include.module.xslfo.url = http://apache.cs.uu.nl/xmlgraphics/fop/binaries/fop-1.1-bin.zip
+include.module.xslfo.url = http://mirror.ox.ac.uk/sites/rsync.apache.org/xmlgraphics/fop/binaries/fop-2.1-bin.zip
 include.module.process = false",
 	require => File[$exist_home]
 }
